@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  key-service:
+    build:
+      context: .
+      dockerfile: publickey.dockerfile
+    container_name: key-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATA_REDIS_HOST=redis-cluster-keys
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=docker_rj_local_2026
+    networks:
+      - microservicios-net
+    depends_on:
+      - redis-keys
+
+  redis-keys:
+    image: redis:7.2-alpine
+    container_name: redis-cluster-keys
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - microservicios-net
+    # Comando para asegurar que Redis pida la contraseña que configuraste
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "docker_rj_local_2026"]
+
+networks:
+  microservicios-net:
+    driver: bridge
+
+volumes:
+  redis_data:
