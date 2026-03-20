@@ -3,7 +3,7 @@ version: '3.8'
 services:
   key-service:
     build:
-      context: .
+      context: ./key_service
       dockerfile: publickey.dockerfile
     container_name: key-service
     ports:
