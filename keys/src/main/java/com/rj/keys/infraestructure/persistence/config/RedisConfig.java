@@ -1,4 +1,4 @@
-package com.rj.key_service.infraestructure.persistence.config;
+package com.rj.keys.infraestructure.persistence.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

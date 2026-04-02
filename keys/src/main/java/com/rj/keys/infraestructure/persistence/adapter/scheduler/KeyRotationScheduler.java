@@ -1,10 +1,10 @@
-package com.rj.key_service.infraestructure.persistence.adapter.scheduler;
+package com.rj.keys.infraestructure.persistence.adapter.scheduler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import com.rj.keys.domain.ports.in.RotateKeyUseCase;
 import org.springframework.scheduling.annotation.Scheduled;
-import com.rj.key_service.domain.ports.in.RotateKeyUseCase;
 
 @Component
 public class KeyRotationScheduler {
