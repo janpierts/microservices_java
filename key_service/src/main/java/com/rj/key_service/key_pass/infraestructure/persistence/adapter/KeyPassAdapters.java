@@ -6,58 +6,53 @@ import com.rj.key_service.key_pass.infraestructure.persistence.repository.KeysRe
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class KeyPassAdapters implements Key_pass_RepositoryPort {
+    private final JdbcTemplate jdbcTemplate;
     private final KeysRedisRepository repository;
-    public KeyPassAdapters(KeysRedisRepository repository) {
+    public KeyPassAdapters(KeysRedisRepository repository, JdbcTemplate jdbcTemplate) {
         this.repository = repository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public key_pass_Entity SetPassKeyWord(String passKeyWord) {
+        String sql = "{ call jbAPI_updateKeypass(?,?,?,?) }"; 
         List<key_pass_Entity> existsKeys = new ArrayList<>();
         try {
             repository.findAll().forEach(existsKeys::add);
             LocalDateTime now = LocalDateTime.now();
 
             if (existsKeys.isEmpty()) {
-                return saveNewKey(1, passKeyWord, true, now);
+                jdbcTemplate.update(sql, passKeyWord, existsKeys.size()+1, "", 0);
+                return saveNewKey(0, passKeyWord, true, now, existsKeys);
 
-            } else if (existsKeys.size() == 1) {
-                rotateKey(existsKeys.get(0), 2, false, now);
-                return saveNewKey(1, passKeyWord, true, now);
-
-            } else {
-                key_pass_Entity oldKey = existsKeys.stream().filter(k -> k.getId() == 2).findFirst().orElse(existsKeys.get(1));
-                repository.delete(oldKey);
-
-                key_pass_Entity currentKey = existsKeys.stream().filter(k -> k.getId() == 1).findFirst().orElse(existsKeys.get(0));
-                rotateKey(currentKey, 2, false, now);
-
-                return saveNewKey(1, passKeyWord, true, now);
+            } else{
+                String oldPassKey = existsKeys.stream().filter(k -> k.isState()).findFirst().map(key_pass_Entity::getPassKey).orElse("");
+                jdbcTemplate.update(sql, passKeyWord, existsKeys.size()+1, oldPassKey, existsKeys.size());
+                return saveNewKey(existsKeys.size(), passKeyWord, true, now, existsKeys);
             }
         } catch (Exception e) {
             throw new RuntimeException("Error en la rotación de llaves: " + e.getMessage());
         }
     }
 
-    private key_pass_Entity saveNewKey(int id, String pass, boolean state, LocalDateTime now) {
+    private key_pass_Entity saveNewKey(int id, String pass, boolean state, LocalDateTime now, List<key_pass_Entity> old_keys) {
+        old_keys.stream()
+            .filter(k -> k.isState())
+            .forEach(key -> {
+                key.setState(false);
+                repository.save(key);
+        });
         key_pass_Entity newKey = new key_pass_Entity();
-        newKey.setId(id);
+        newKey.setId(id++);
         newKey.setPassKey(pass);
         newKey.setCreatedAt(now);
         newKey.setUpdatedAt(now);
         newKey.setState(state);
         return repository.save(newKey);
-    }
-
-    private void rotateKey(key_pass_Entity key, int newId, boolean newState, LocalDateTime now) {
-        repository.delete(key);
-        key.setId(newId);
-        key.setState(newState);
-        key.setUpdatedAt(now);
-        repository.save(key);
     }
 }
