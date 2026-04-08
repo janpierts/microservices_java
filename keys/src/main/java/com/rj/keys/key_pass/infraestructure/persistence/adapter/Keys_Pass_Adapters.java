@@ -2,15 +2,15 @@ package com.rj.keys.key_pass.infraestructure.persistence.adapter;
 
 import com.rj.keys.key_pass.domain.model.keys_pass_Entity;
 import com.rj.keys.key_pass.domain.ports.out.Keys_Pass_RepositoryPort;
-import com.rj.keys.key_pass.infraestructure.persistence.repository.KeysRedisRepository;
+import com.rj.keys.key_pass.infraestructure.persistence.repository.KeysPassRedisRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Keys_Pass_Adapters implements Keys_Pass_RepositoryPort {
-    private final KeysRedisRepository repository;
-    public Keys_Pass_Adapters(KeysRedisRepository repository) {
+    private final KeysPassRedisRepository repository;
+    public Keys_Pass_Adapters(KeysPassRedisRepository repository) {
         this.repository = repository;
     }
 

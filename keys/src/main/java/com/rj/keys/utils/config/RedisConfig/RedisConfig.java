@@ -1,4 +1,4 @@
-package com.rj.key_service.key.infraestructure.persistence.config;
+package com.rj.keys.utils.config.RedisConfig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
-@EnableRedisRepositories(basePackages = "com.rj.key_service.key.infraestructure.persistence.repository")
+@EnableRedisRepositories(basePackages = {
+    "com.rj.keys.key_pass.infraestructure.persistence.repository",
+    "com.rj.keys.keys_token.infraestructure.persistence.repository"
+})
 public class RedisConfig {
 
     @Bean

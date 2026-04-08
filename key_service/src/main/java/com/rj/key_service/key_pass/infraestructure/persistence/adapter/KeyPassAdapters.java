@@ -5,7 +5,7 @@ import com.rj.key_service.key_pass.domain.model.key_pass_Entity;
 import com.rj.key_service.key_pass.domain.model.key_pass_JSON_Entity;
 import com.rj.key_service.key_pass.domain.model.key_pass_up_JSON_Entity;
 import com.rj.key_service.key_pass.domain.ports.out.Key_pass_RepositoryPort;
-import com.rj.key_service.key_pass.infraestructure.persistence.repository.KeysRedisRepository;
+import com.rj.key_service.key_pass.infraestructure.persistence.repository.KeyPassRedisRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class KeyPassAdapters implements Key_pass_RepositoryPort {
     private final JdbcTemplate jdbcTemplate;
-    private final KeysRedisRepository repository;
-    public KeyPassAdapters(KeysRedisRepository repository, JdbcTemplate jdbcTemplate) {
+    private final KeyPassRedisRepository repository;
+    public KeyPassAdapters(KeyPassRedisRepository repository, JdbcTemplate jdbcTemplate) {
         this.repository = repository;
         this.jdbcTemplate = jdbcTemplate;
     }
