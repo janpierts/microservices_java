@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface KeysRedisRepository extends CrudRepository<key_pass_Entity, Integer> {
+public interface KeyPassRedisRepository extends CrudRepository<key_pass_Entity, Integer> {
 
 }

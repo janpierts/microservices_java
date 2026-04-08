@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 import com.rj.keys.keys_token.domain.model.private_key_Entity;
 import com.rj.keys.keys_token.domain.model.public_keys_Entity;
 import com.rj.keys.keys_token.domain.ports.out.Keys_RepositoryPort;
-import com.rj.keys.keys_token.infraestructure.persistence.repository.KeysRedisRepository;
+import com.rj.keys.keys_token.infraestructure.persistence.repository.KeysTokenRedisRepository;
 
 @Component
 public class KeysAdapters implements Keys_RepositoryPort {
-    private final KeysRedisRepository repository;
+    private final KeysTokenRedisRepository repository;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     
-    public KeysAdapters(KeysRedisRepository repository,StringRedisTemplate stringRedisTemplate) {
+    public KeysAdapters(KeysTokenRedisRepository repository,StringRedisTemplate stringRedisTemplate) {
         this.repository = repository;
         this.stringRedisTemplate = stringRedisTemplate;
     }

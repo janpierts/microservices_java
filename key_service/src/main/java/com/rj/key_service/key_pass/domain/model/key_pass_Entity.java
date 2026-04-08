@@ -19,7 +19,7 @@ public class key_pass_Entity {
     public key_pass_Entity() {
     }
 
-    public key_pass_Entity(int id, String pass_key, String privateKey, LocalDateTime createdAt, LocalDateTime updatedAt,
+    public key_pass_Entity(int id, String pass_key, LocalDateTime createdAt, LocalDateTime updatedAt,
             boolean state) {
         this.id = id;
         this.pass_key = pass_key;

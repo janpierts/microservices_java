@@ -2,7 +2,7 @@ package com.rj.key_service.key.infraestructure.persistence.adapter;
 
 import com.rj.key_service.key.domain.model.keys_Entity;
 import com.rj.key_service.key.domain.ports.out.Keys_RepositoryPort;
-import com.rj.key_service.key.infraestructure.persistence.repository.KeysRedisRepository;
+import com.rj.key_service.key.infraestructure.persistence.repository.KeyRedisRepository;
 import com.rj.key_service.utils.KeyGeneratorUtils;
 import java.security.KeyPair;
 import java.time.LocalDateTime;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class KeysAdapters implements Keys_RepositoryPort {
-    private final KeysRedisRepository repository;
+    private final KeyRedisRepository repository;
     private final RedisTemplate<String, Object> redisTemplate;
-    public KeysAdapters(KeysRedisRepository repository, RedisTemplate<String, Object> redisTemplate) {
+    public KeysAdapters(KeyRedisRepository repository, RedisTemplate<String, Object> redisTemplate) {
         this.repository = repository;
         this.redisTemplate = redisTemplate;
     }
