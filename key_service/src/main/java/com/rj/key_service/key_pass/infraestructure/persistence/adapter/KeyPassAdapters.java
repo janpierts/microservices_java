@@ -3,6 +3,7 @@ package com.rj.key_service.key_pass.infraestructure.persistence.adapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rj.key_service.key_pass.domain.model.key_pass_Entity;
 import com.rj.key_service.key_pass.domain.model.key_pass_JSON_Entity;
+import com.rj.key_service.key_pass.domain.model.key_pass_request_Entity;
 import com.rj.key_service.key_pass.domain.model.key_pass_up_JSON_Entity;
 import com.rj.key_service.key_pass.domain.ports.out.Key_pass_RepositoryPort;
 import com.rj.key_service.key_pass.infraestructure.persistence.repository.KeyPassRedisRepository;
@@ -10,7 +11,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class KeyPassAdapters implements Key_pass_RepositoryPort {
@@ -22,11 +27,12 @@ public class KeyPassAdapters implements Key_pass_RepositoryPort {
     }
 
     @Override
-    public key_pass_Entity SetPassKeyWord(String passKeyWord) {
+    @Transactional
+    public key_pass_Entity SetPassKeyWord(key_pass_request_Entity request) {
         ObjectMapper objectMapper = new ObjectMapper();
-        String sql = "{ call jbAPI_updateKeypass(?) }"; 
+        String sql = "jbAPI_updateKeypass"; 
         key_pass_up_JSON_Entity JsonToUpdate = new key_pass_up_JSON_Entity();
-        JsonToUpdate.setPassKey(passKeyWord);
+        JsonToUpdate.setPass_key(request.getPass_key());
         List<key_pass_Entity> existsKeys = new ArrayList<>();
         String jsonEntities = "";
         try {
@@ -36,18 +42,34 @@ public class KeyPassAdapters implements Key_pass_RepositoryPort {
             if (existsKeys.isEmpty()) {
                 JsonToUpdate.setId_passkey(1);
                 jsonEntities = objectMapper.writeValueAsString(JsonToUpdate);
-                jdbcTemplate.update(sql, jsonEntities);
-                return saveNewKey(0, passKeyWord, true, now, existsKeys);
+                SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                    .withProcedureName(sql);
+                SqlParameterSource in = new MapSqlParameterSource()
+                    .addValue("p_data_json", jsonEntities);
+                jdbcCall.execute(in);
+                //Map<String, Object> result = jdbcCall.execute(in);
+                //System.out.println("Resultado del procedimiento almacenado: " + result);
+                return saveNewKey(1, request.getPass_key(), true, now, existsKeys);
 
             } else{
                 String sqllistKeyPass = "{ call jbAPI_listAllKeypass()}";
-                String oldPassKey = existsKeys.stream().filter(k -> k.isState()).findFirst().map(key_pass_Entity::getPassKey).orElse("");
-                JsonToUpdate.setId_passkey(existsKeys.size()+1);
-                JsonToUpdate.setId_old_passkey(existsKeys.size());
+                String oldPassKey = existsKeys.stream().filter(k -> k.isState()).findFirst().map(key_pass_Entity::getPass_key).orElse("");
+                Integer idOldPassKey = existsKeys.stream().filter(k -> k.isState()).findFirst().map(key_pass_Entity::getId).orElse(0);
+                Integer newIdPassKey = existsKeys.stream().filter(k -> k.isState()).findFirst().map(key_pass_Entity::getId).orElse(0)+1;
+                if(existsKeys.size() == 1){
+                    newIdPassKey = newIdPassKey == 2 ? newIdPassKey : 1;
+                }
+                JsonToUpdate.setId_passkey(newIdPassKey);
+                JsonToUpdate.setId_old_passkey(idOldPassKey);
                 JsonToUpdate.setOld_passkey(oldPassKey);
                 jsonEntities = objectMapper.writeValueAsString(JsonToUpdate);
-                jdbcTemplate.update(sql, jsonEntities);
-                key_pass_Entity  newKey = saveNewKey(existsKeys.size(), passKeyWord, true, now, existsKeys); 
+                SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                    .withProcedureName(sql);
+                SqlParameterSource in = new MapSqlParameterSource()
+                    .addValue("p_data_json", jsonEntities);
+                    
+                jdbcCall.execute(in);
+                key_pass_Entity  newKey = saveNewKey(newIdPassKey, request.getPass_key(), true, now, existsKeys); 
                 List<Integer> idKeypass = jdbcTemplate.queryForList(sqllistKeyPass,Integer.class);
                 if(idKeypass.size() > 1){
                     existsKeys.clear();
@@ -62,15 +84,29 @@ public class KeyPassAdapters implements Key_pass_RepositoryPort {
                     
                     String sqlupKeyPass = "{ call jbAPI_updateAllKeypass(?)}";
                     List<key_pass_JSON_Entity> filteredJSONEntities = new ArrayList<>();
-                    filteredJSONEntities.add(existsKeys.stream().filter(k -> k.isState()).map(k -> new key_pass_JSON_Entity(k.getId(), k.getPassKey(), k.isState())).findFirst().orElse(null));
+                    filteredJSONEntities.add(existsKeys.stream().filter(k -> k.isState()).map(k -> new key_pass_JSON_Entity(k.getId(), k.getPass_key(), k.isState())).findFirst().orElse(null));
                     idKeypass.forEach(id -> {
                         existsKeys.stream()
                             .filter(k -> k.getId() ==id)
                             .findFirst()
-                            .ifPresent(k -> filteredJSONEntities.add(new key_pass_JSON_Entity(k.getId(), k.getPassKey(), k.isState()))); 
+                            .ifPresent(k -> filteredJSONEntities.add(new key_pass_JSON_Entity(k.getId(), k.getPass_key(), k.isState()))); 
                     });
                     jsonEntities = objectMapper.writeValueAsString(filteredJSONEntities);
-                    jdbcTemplate.update(sqlupKeyPass, jsonEntities);
+
+                    jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                        .withProcedureName(sqlupKeyPass);
+                    in = new MapSqlParameterSource()
+                        .addValue("p_data_json", jsonEntities);
+                    
+                    jdbcCall.execute(in);
+                }
+                idKeypass.clear();
+                idKeypass = jdbcTemplate.queryForList(sqllistKeyPass,Integer.class);
+                existsKeys.clear();
+                repository.findAll().forEach(existsKeys::add);
+
+                if(existsKeys.size() >1 && existsKeys.size() != idKeypass.size()){
+                    cleanOldKeys(existsKeys);
                 }
                 return newKey;
             }
@@ -79,19 +115,32 @@ public class KeyPassAdapters implements Key_pass_RepositoryPort {
         }
     }
 
-    private key_pass_Entity saveNewKey(int id, String pass, boolean state, LocalDateTime now, List<key_pass_Entity> old_keys) {
-        old_keys.stream()
-            .filter(k -> k.isState())
-            .forEach(key -> {
-                key.setState(false);
-                repository.save(key);
-        });
+    private key_pass_Entity saveNewKey(int id, String pass_key, boolean state, LocalDateTime now, List<key_pass_Entity> old_keys) {
+        if(!old_keys.isEmpty()){
+            old_keys.stream()
+                .filter(k -> k.isState())
+                .forEach(key -> {
+                    key.setState(false);
+                    repository.save(key);
+            });
+        }
+        System.out.println("Old keys deactivated: " + pass_key);
         key_pass_Entity newKey = new key_pass_Entity();
-        newKey.setId(id++);
-        newKey.setPassKey(pass);
+        newKey.setId(id);
+        newKey.setPass_key(pass_key);
         newKey.setCreatedAt(now);
         newKey.setUpdatedAt(now);
         newKey.setState(state);
         return repository.save(newKey);
     }
+    private void cleanOldKeys(List<key_pass_Entity> old_keys){
+        old_keys.stream()
+            .filter(k -> !k.isState())
+            .forEach(repository::delete);
+            /*
+            .forEach(key -> {
+                key.setState(false);
+                repository.delete(key);
+             */
+    }  
 }

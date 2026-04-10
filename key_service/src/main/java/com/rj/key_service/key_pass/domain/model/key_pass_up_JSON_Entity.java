@@ -21,10 +21,10 @@ public class key_pass_up_JSON_Entity {
     public void setId_passkey(int id_passkey) {
         this.id_passkey = id_passkey;
     }
-    public String getPassKey() {
+    public String getPass_key() {
         return pass_key;
     }
-    public void setPassKey(String pass_key) {
+    public void setPass_key(String pass_key) {
         this.pass_key = pass_key;
     }
     public int getId_old_passkey() {

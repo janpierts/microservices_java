@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 
 services:
   key-service:
@@ -6,6 +6,8 @@ services:
       context: ./key_service
       dockerfile: publickey.dockerfile
     container_name: key-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8081:8081"
     environment:
