@@ -19,10 +19,10 @@ public class key_pass_JSON_Entity {
     public void setId(int id) {
         this.id = id;
     }
-    public String getPassKey() {
+    public String get_PassKey() {
         return pass_key;
     }
-    public void setPassKey(String pass_key) {
+    public void set_PassKey(String pass_key) {
         this.pass_key = pass_key;
     }
     public boolean isState() {

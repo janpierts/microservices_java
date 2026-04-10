@@ -6,6 +6,7 @@ import com.rj.key_service.key_pass.domain.service.Key_pass_Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.rj.key_service.key_pass.domain.model.key_pass_Entity;
+import com.rj.key_service.key_pass.domain.model.key_pass_request_Entity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -18,8 +19,8 @@ public class KeyPassServiceController {
         this.keysService = keysService;
     }
     @PostMapping("SetPassKeyWord")
-    public ResponseEntity<key_pass_Entity> SetPassKeyWord(@RequestBody String passKeyWord) {
-        key_pass_Entity key = keysService.SetPassKeyWord(passKeyWord);
+    public ResponseEntity<key_pass_Entity> SetPassKeyWord(@RequestBody key_pass_request_Entity request) {
+        key_pass_Entity key = keysService.SetPassKeyWord(request);
         return new ResponseEntity<>(key, HttpStatus.CREATED);
     }
 }
