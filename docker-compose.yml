@@ -6,6 +6,7 @@ services:
       context: ./key_service
       dockerfile: publickey.dockerfile
     container_name: key-service
+    #restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
@@ -24,6 +25,7 @@ services:
       context: ./keys
       dockerfile: publickey.dockerfile
     container_name: keys
+    #restart: always
     ports:
       - "8082:8081"
     environment:
