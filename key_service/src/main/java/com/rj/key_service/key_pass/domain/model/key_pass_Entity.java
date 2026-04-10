@@ -33,10 +33,10 @@ public class key_pass_Entity {
     public void setId(int id) {
         this.id = id;
     }
-    public String getPassKey() {
+    public String getPass_key() {
         return pass_key;
     }
-    public void setPassKey(String pass_key) {
+    public void setPass_key(String pass_key) {
         this.pass_key = pass_key;
     }
     public LocalDateTime getCreatedAt() {
