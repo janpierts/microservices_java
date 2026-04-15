@@ -3,7 +3,6 @@ package com.rj.auth.login.infrastructure.persistence.entity;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import com.rj.auth.login.domain.model.Login_request_pass_Entity;
-import com.rj.auth.login.domain.model.Login_user_Entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

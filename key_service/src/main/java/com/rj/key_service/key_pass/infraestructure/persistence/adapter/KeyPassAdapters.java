@@ -10,26 +10,43 @@ import com.rj.key_service.key_pass.infraestructure.persistence.repository.KeyPas
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class KeyPassAdapters implements Key_pass_RepositoryPort {
-    private final JdbcTemplate jdbcTemplate;
+    @Value("${spring.datasource.url}")
+    private String datasourceUrl;
+    @Value("${spring.datasource.username}")
+    private String datasourceUsername;
+    @Value("${spring.datasource.password}")
+    private String datasourcePassword;
+    @Value("${spring.datasource.driver-class-name}")
+    private String datasourceDriverClassName;
     private final KeyPassRedisRepository repository;
-    public KeyPassAdapters(KeyPassRedisRepository repository, JdbcTemplate jdbcTemplate) {
+    public KeyPassAdapters(KeyPassRedisRepository repository) {
         this.repository = repository;
-        this.jdbcTemplate = jdbcTemplate;
     }
-
+    
+    private JdbcTemplate getDynamicJdbcTemplate(){
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(datasourceDriverClassName);
+        dataSource.setUrl(datasourceUrl);
+        dataSource.setUsername(datasourceUsername);
+        dataSource.setPassword(datasourcePassword);
+        return new JdbcTemplate(dataSource);
+    }
     @Override
     @Transactional
     public key_pass_Entity SetPassKeyWord(key_pass_request_Entity request) {
         ObjectMapper objectMapper = new ObjectMapper();
+        JdbcTemplate jdbcTemplate = getDynamicJdbcTemplate();
         String sql = "jbAPI_updateKeypass"; 
         key_pass_up_JSON_Entity JsonToUpdate = new key_pass_up_JSON_Entity();
         JsonToUpdate.setPass_key(request.getPass_key());
@@ -47,8 +64,6 @@ public class KeyPassAdapters implements Key_pass_RepositoryPort {
                 SqlParameterSource in = new MapSqlParameterSource()
                     .addValue("p_data_json", jsonEntities);
                 jdbcCall.execute(in);
-                //Map<String, Object> result = jdbcCall.execute(in);
-                //System.out.println("Resultado del procedimiento almacenado: " + result);
                 return saveNewKey(1, request.getPass_key(), true, now, existsKeys);
 
             } else{
@@ -124,7 +139,7 @@ public class KeyPassAdapters implements Key_pass_RepositoryPort {
                     repository.save(key);
             });
         }
-        System.out.println("Old keys deactivated: " + pass_key);
+        //System.out.println("key: " + pass_key);
         key_pass_Entity newKey = new key_pass_Entity();
         newKey.setId(id);
         newKey.setPass_key(pass_key);
