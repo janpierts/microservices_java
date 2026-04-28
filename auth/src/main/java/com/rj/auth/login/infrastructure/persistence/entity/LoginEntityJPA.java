@@ -2,7 +2,9 @@ package com.rj.auth.login.infrastructure.persistence.entity;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import com.rj.auth.login.domain.model.Login_request_pass_Entity;
+
+import com.rj.auth.login.domain.Login_request_pass_Entity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +21,7 @@ public class LoginEntityJPA {
     private String user_name;
 
     @Column( name = "user_password")
-    private Byte[] user_password;
+    private byte[] user_password;
 
     @Column( name = "id_passkey")
     private long id_passkey;
@@ -76,10 +78,10 @@ public class LoginEntityJPA {
     public void setUser_name(String user_name) {
         this.user_name = user_name;
     }
-    public Byte[] getUser_password() {
+    public byte[] getUser_password() {
         return user_password;
     }
-    public void setUser_password(Byte[] user_password) {
+    public void setUser_password(byte[] user_password) {
         this.user_password = user_password;
     }
     public long getId_passkey() {

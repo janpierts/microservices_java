@@ -2,11 +2,12 @@ package com.rj.key_service.key_pass.infraestructure.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.rj.key_service.key_pass.domain.service.Key_pass_Service;
+
+import com.rj.key_service.key_pass.domain.key_pass_Entity;
+import com.rj.key_service.key_pass.domain.key_pass_request_Entity;
+import com.rj.key_service.key_pass.application.service.Key_pass_Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.rj.key_service.key_pass.domain.model.key_pass_Entity;
-import com.rj.key_service.key_pass.domain.model.key_pass_request_Entity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 

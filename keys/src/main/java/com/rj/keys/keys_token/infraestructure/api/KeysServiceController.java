@@ -2,9 +2,9 @@ package com.rj.keys.keys_token.infraestructure.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.rj.keys.keys_token.domain.model.private_key_Entity;
-import com.rj.keys.keys_token.domain.model.public_keys_Entity;
-import com.rj.keys.keys_token.domain.service.Keys_Service;
+import com.rj.keys.keys_token.application.service.Keys_Service;
+import com.rj.keys.keys_token.domain.private_key_Entity;
+import com.rj.keys.keys_token.domain.public_keys_Entity;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

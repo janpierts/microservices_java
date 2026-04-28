@@ -4,9 +4,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-import com.rj.keys.keys_token.domain.model.private_key_Entity;
-import com.rj.keys.keys_token.domain.model.public_keys_Entity;
-import com.rj.keys.keys_token.domain.ports.out.Keys_RepositoryPort;
+import com.rj.keys.keys_token.application.ports.out.Keys_RepositoryPort;
+import com.rj.keys.keys_token.domain.private_key_Entity;
+import com.rj.keys.keys_token.domain.public_keys_Entity;
 import com.rj.keys.keys_token.infraestructure.persistence.repository.KeysTokenRedisRepository;
 
 @Component

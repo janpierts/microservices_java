@@ -3,8 +3,8 @@ package com.rj.key_service.key.infraestructure.persistence.adapter.scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import com.rj.key_service.key.application.ports.in.RotateKeyUseCase;
 import org.springframework.scheduling.annotation.Scheduled;
-import com.rj.key_service.key.domain.ports.in.RotateKeyUseCase;
 
 @Component
 public class KeyRotationScheduler {
