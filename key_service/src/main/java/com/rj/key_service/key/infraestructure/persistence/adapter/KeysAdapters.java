@@ -1,7 +1,7 @@
 package com.rj.key_service.key.infraestructure.persistence.adapter;
 
-import com.rj.key_service.key.domain.model.keys_Entity;
-import com.rj.key_service.key.domain.ports.out.Keys_RepositoryPort;
+import com.rj.key_service.key.application.ports.out.Keys_RepositoryPort;
+import com.rj.key_service.key.domain.keys_Entity;
 import com.rj.key_service.key.infraestructure.persistence.repository.KeyRedisRepository;
 import com.rj.key_service.utils.KeyGeneratorUtils;
 import java.security.KeyPair;

@@ -1,11 +1,11 @@
 package com.rj.key_service.key_pass.infraestructure.persistence.adapter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rj.key_service.key_pass.domain.model.key_pass_Entity;
-import com.rj.key_service.key_pass.domain.model.key_pass_JSON_Entity;
-import com.rj.key_service.key_pass.domain.model.key_pass_request_Entity;
-import com.rj.key_service.key_pass.domain.model.key_pass_up_JSON_Entity;
-import com.rj.key_service.key_pass.domain.ports.out.Key_pass_RepositoryPort;
+import com.rj.key_service.key_pass.domain.key_pass_Entity;
+import com.rj.key_service.key_pass.domain.key_pass_JSON_Entity;
+import com.rj.key_service.key_pass.domain.key_pass_request_Entity;
+import com.rj.key_service.key_pass.domain.key_pass_up_JSON_Entity;
+import com.rj.key_service.key_pass.application.ports.out.Key_pass_RepositoryPort;
 import com.rj.key_service.key_pass.infraestructure.persistence.repository.KeyPassRedisRepository;
 import com.rj.key_service.utils.config.settings.JDBCConfig;
 import java.time.LocalDateTime;

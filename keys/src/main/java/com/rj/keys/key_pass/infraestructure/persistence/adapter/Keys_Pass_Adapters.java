@@ -1,7 +1,7 @@
 package com.rj.keys.key_pass.infraestructure.persistence.adapter;
 
-import com.rj.keys.key_pass.domain.model.keys_pass_Entity;
-import com.rj.keys.key_pass.domain.ports.out.Keys_Pass_RepositoryPort;
+import com.rj.keys.key_pass.application.ports.out.Keys_Pass_RepositoryPort;
+import com.rj.keys.key_pass.domain.keys_pass_Entity;
 import com.rj.keys.key_pass.infraestructure.persistence.repository.KeysPassRedisRepository;
 import java.util.ArrayList;
 import java.util.List;

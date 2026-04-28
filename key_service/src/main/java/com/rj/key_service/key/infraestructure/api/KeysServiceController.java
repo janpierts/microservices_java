@@ -2,10 +2,10 @@ package com.rj.key_service.key.infraestructure.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.rj.key_service.key.domain.service.Keys_Service;
+import com.rj.key_service.key.application.service.Keys_Service;
+import com.rj.key_service.key.domain.keys_Entity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.rj.key_service.key.domain.model.keys_Entity;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
